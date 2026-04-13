@@ -55,4 +55,6 @@ urlpatterns = [
         name='view_profile'),
     url(r'^certificate/$', views.certificate_mockup,
         name='certificate_mockup'),
+    url(r'^api/suggestions/$', views.api_workshop_suggestions,
+        name='api_workshop_suggestions'),
 ]

@@ -1,37 +1,18 @@
-/*
- * base.css — main stylesheet for the FOSSEE Workshop Booking UI refresh
- *
- * I went with CSS custom properties for a simple "design system" instead of
- * pulling in a whole utility framework. Keeps things readable and easy to
- * tweak later if someone wants to change the colour palette, spacing, etc.
- *
- * Fonts: Sora (headings) + Inter (body text). Both loaded from Google Fonts
- * in base.html. Sora gives a slightly techy feel while Inter is super
- * readable at small sizes — seemed like a good combo for a workshop portal.
- */
-
 @import url('https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600&display=swap');
 
-/* ── Design tokens ─────────────────────────────────────────────────
-   Centralised here so the whole site stays consistent.
-   Just change a value and it ripples everywhere.                    */
-
 :root {
-  /* core blues — slightly richer than before */
-  --clr-primary:     #ea580c;
-  --clr-primary-dk:  #c2410c;
-  --clr-primary-lt:  #fff7ed;
 
-  /* secondary accent for gradients */
-  --clr-secondary:   #f97316;
+  --clr-primary:     #4f46e5;
+  --clr-primary-dk:  #3730a3;
+  --clr-primary-lt:  #eef2ff;
 
-  /* status colours — used on badges, alerts, buttons */
-  --clr-accent:      #f97316;
-  --clr-success:     #16a34a;
-  --clr-warning:     #d97706;
-  --clr-danger:      #dc2626;
+  --clr-secondary:   #6366f1;
 
-  /* surfaces & text */
+  --clr-accent:      #6366f1;
+  --clr-success:     #10b981;
+  --clr-warning:     #f59e0b;
+  --clr-danger:      #ef4444;
+
   --clr-bg:          #f0f4f8;
   --clr-surface:     rgba(255, 255, 255, 0.82);
   --clr-surface-solid: #ffffff;
@@ -39,20 +20,17 @@
   --clr-text:        #1e293b;
   --clr-text-muted:  #64748b;
 
-  /* navbar */
   --clr-nav-bg:      rgba(15, 23, 42, 0.88);
   --clr-nav-text:    #e2e8f0;
 
-  /* border radius — sm for inputs/buttons, md for cards, lg for big panels */
   --radius-sm:       8px;
   --radius-md:       14px;
   --radius-lg:       20px;
 
-  /* shadows — layered for more realistic depth */
   --shadow-sm:       0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
   --shadow-md:       0 4px 6px rgba(0,0,0,.04), 0 10px 20px rgba(0,0,0,.06);
   --shadow-lg:       0 10px 25px rgba(0,0,0,.06), 0 20px 48px rgba(0,0,0,.09);
-  --shadow-glow:     0 0 20px rgba(234, 88, 12, 0.15);
+  --shadow-glow:     0 0 20px rgba(79, 70, 229, 0.15);
 
   --transition:      0.25s cubic-bezier(.4, 0, .2, 1);
   --transition-slow: 0.4s cubic-bezier(.4, 0, .2, 1);
@@ -60,7 +38,6 @@
   --font-body:       'Inter', sans-serif;
 }
 
-/* ── Dark theme overrides ────────────────────────────────────────── */
 body.dark-theme {
   --clr-bg:          #0f172a;
   --clr-surface:     rgba(30, 41, 59, 0.7);
@@ -69,17 +46,13 @@ body.dark-theme {
   --clr-text:        #f1f5f9;
   --clr-text-muted:  #94a3b8;
   --clr-nav-bg:      rgba(2, 6, 23, 0.92);
-  --clr-primary-lt:  rgba(234, 88, 12, 0.1);
-  --clr-primary-dk:  #fb923c; /* lighter orange for better contrast on dark */
-  
+  --clr-primary-lt:  rgba(79, 70, 229, 0.1);
+  --clr-primary-dk:  #818cf8; 
+
   --shadow-sm:       0 1px 3px rgba(0,0,0,.3), 0 1px 2px rgba(0,0,0,.2);
   --shadow-md:       0 4px 6px rgba(0,0,0,.3), 0 10px 20px rgba(0,0,0,.4);
   --shadow-lg:       0 10px 25px rgba(0,0,0,.4), 0 20px 48px rgba(0,0,0,.5);
 }
-
-
-
-/* ── Keyframe animations ───────────────────────────────────────── */
 
 @keyframes fadeInUp {
   from { opacity: 0; transform: translateY(18px); }
@@ -123,9 +96,6 @@ body.dark-theme {
   67%      { border-radius: 30% 70% 54% 46% / 58% 30% 70% 42%; }
 }
 
-
-/* ── Reset & base typography ───────────────────────────────────── */
-
 *, *::before, *::after { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 
@@ -133,7 +103,7 @@ body {
   font-family: var(--font-body);
   background: var(--clr-bg);
   color: var(--clr-text);
-  font-size: 0.9375rem;       /* 15px — slightly bigger than browser default */
+  font-size: 0.9375rem;       
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
@@ -149,10 +119,6 @@ h1,h2,h3,h4,h5,h6 {
 
 a { color: var(--clr-primary); text-decoration: none; transition: color var(--transition); }
 a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
-
-
-/* ── Background decoration ─────────────────────────────────────── */
-/* Clean, intentional radial glow instead of random blobs. */
 
 .bg-decoration {
   position: absolute;
@@ -177,21 +143,15 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
 }
 
 .bg-blob-2, .bg-blob-3 {
-  display: none; /* Removed noisy background blobs to keep it intentional */
+  display: none; 
 }
 
-/* push the page content below the fixed navbar + above the fixed footer */
 .base-content {
   padding-top: 80px;
   padding-bottom: 64px;
   min-height: 100vh;
   animation: fadeIn 0.5s ease-out;
 }
-
-
-/* ── Navbar ────────────────────────────────────────────────────────
-   Glass effect with backdrop blur. Feels premium without being
-   obnoxious. The gradient underline ties it to the brand.          */
 
 .navbar {
   background: var(--clr-nav-bg) !important;
@@ -204,13 +164,12 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   box-shadow: 0 4px 20px rgba(0,0,0,.2);
 }
 
-/* subtle gradient line at the bottom of the navbar */
 .navbar::after {
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
   height: 2px;
-  background: linear-gradient(90deg, #ea580c, #f97316, #06b6d4, #ea580c);
+  background: linear-gradient(90deg, #4f46e5, #6366f1, #06b6d4, #4f46e5);
   background-size: 300% 100%;
   animation: gradientShift 8s ease infinite;
   opacity: 0.7;
@@ -227,11 +186,10 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   gap: 10px;
 }
 
-/* the "FW" square next to the brand text — now with gradient */
 .nav-logo-icon {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #ea580c, #f97316);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -245,7 +203,7 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
 
 .navbar-brand:hover .nav-logo-icon {
   transform: rotate(-6deg) scale(1.08);
-  box-shadow: 0 0 16px rgba(249, 115, 22, 0.4);
+  box-shadow: 0 0 16px rgba(99, 102, 241, 0.4);
 }
 
 .navbar-nav .nav-link {
@@ -265,12 +223,10 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   transform: translateY(-1px);
 }
 
-/* active nav item indicator */
 .navbar-nav .nav-link.active {
   background: rgba(255,255,255,.12);
 }
 
-/* hamburger icon — custom SVG so it shows up white on the dark bg */
 .navbar-toggler {
   border: 1px solid rgba(255,255,255,.25);
   padding: 4px 8px;
@@ -280,7 +236,6 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.8)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
 }
 
-/* user menu dropdown — glass effect */
 .dropdown-menu {
   border: 1px solid var(--clr-border);
   border-radius: var(--radius-md);
@@ -306,11 +261,6 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   transform: translateX(3px);
 }
 
-
-/* ── Cards ─────────────────────────────────────────────────────────
-   Glassmorphism + gradient accent top. The blur effect gives
-   depth without heavy shadows.                                      */
-
 .card {
   border: 1px solid var(--clr-border);
   border-radius: var(--radius-md);
@@ -327,12 +277,11 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
   box-shadow: var(--shadow-md);
 }
 
-/* thin gradient strip at the top of cards */
 .card::before {
   content: '';
   display: block;
   height: 3px;
-  background: linear-gradient(90deg, #ea580c, #f97316);
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
   opacity: 0.6;
 }
 
@@ -346,11 +295,6 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
 }
 
 .card-body { padding: 1.5rem 1.25rem; }
-
-
-/* ── Buttons ───────────────────────────────────────────────────────
-   Gradient fills, glow on hover, subtle lift. Feels premium
-   without going full neon.                                          */
 
 .btn {
   font-family: var(--font-body);
@@ -366,16 +310,16 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
 }
 
 .btn-primary {
-  background: #ea580c; /* Stronger, solid orange */
+  background: #4f46e5; 
   color: #fff;
-  box-shadow: 0 4px 10px rgba(234, 88, 12, 0.25);
-  border: 1px solid #c2410c;
+  box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+  border: 1px solid #3730a3;
 }
 .btn-primary:hover {
-  background: #c2410c; /* Darker shade on hover */
+  background: #3730a3; 
   color: #fff;
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(234, 88, 12, 0.4);
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.4);
 }
 
 .btn-success {
@@ -415,12 +359,6 @@ a:hover { color: var(--clr-primary-dk); text-decoration: underline; }
 
 .btn-md { padding: 0.55rem 1.3rem; }
 .btn-lg { padding: 0.65rem 1.5rem; font-size: 0.95rem; }
-
-
-/* ── Forms ─────────────────────────────────────────────────────────
-   I kept the labels uppercase + small because it separates them
-   visually from the field content. The animated focus ring gives
-   nice tactile feedback.                                            */
 
 .form-group { margin-bottom: 1.15rem; }
 
@@ -478,8 +416,6 @@ textarea.form-control { resize: vertical; min-height: 100px; }
 
 label.required::after { content: " *"; color: var(--clr-danger); }
 
-
-/* Input wrapper for icons inside fields */
 .input-icon-wrapper {
   position: relative;
   display: flex;
@@ -495,7 +431,7 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   z-index: 2;
 }
 .input-icon-wrapper .form-control {
-  padding-left: 44px; /* Make room for the left icon */
+  padding-left: 44px; 
 }
 .input-icon-wrapper:focus-within .material-icons.prefix {
   color: var(--clr-primary);
@@ -518,11 +454,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .password-toggle:hover {
   color: var(--clr-primary);
 }
-
-/* ── Tables ────────────────────────────────────────────────────────
-   The original project dumped raw <table>s everywhere. These
-   styles make them look way nicer. Added a subtle hover with
-   gradient reveal instead of a flat colour swap.                    */
 
 .table { width: 100%; border-collapse: collapse; font-size: 0.9rem; }
 
@@ -566,10 +497,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   -webkit-backdrop-filter: blur(8px);
 }
 
-
-/* ── Badges ────────────────────────────────────────────────────────
-   Pill-shaped status indicators. Added subtle inner glow.           */
-
 .badge {
   display: inline-flex;
   align-items: center;
@@ -588,11 +515,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .badge-danger  { background: #fee2e2; color: var(--clr-danger);  box-shadow: inset 0 0 0 1px rgba(220,38,38,0.12); }
 .badge-info    { background: var(--clr-primary-lt); color: var(--clr-primary); box-shadow: inset 0 0 0 1px rgba(234,88,12,0.1); }
 .badge-primary { background: var(--clr-primary-lt); color: var(--clr-primary); box-shadow: inset 0 0 0 1px rgba(234,88,12,0.1); }
-
-
-/* ── Alerts ────────────────────────────────────────────────────────
-   Left-border accent makes them easy to spot without being
-   too loud. Glass background.                                       */
 
 .alert {
   padding: 12px 16px;
@@ -614,9 +536,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .alert-warning { background: rgba(255,251,235,.85); color: #92400e; border-left: 3px solid var(--clr-warning); }
 .alert-dismissible .close { background: transparent; border: none; font-size: 1.1rem; cursor: pointer; margin-left: auto; opacity: .6; }
 .alert-dismissible .close:hover { opacity: 1; }
-
-
-/* ── Pagination ────────────────────────────────────────────────────  */
 
 .pagination { display: flex; gap: 4px; list-style: none; padding: 0; margin: 1.5rem 0; align-items: center; justify-content: center; flex-wrap: wrap; }
 
@@ -648,10 +567,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 
 .current { padding: 0 10px; font-size: 0.875rem; color: var(--clr-text-muted); }
 
-
-/* ── Footer ────────────────────────────────────────────────────────
-   New multi-column fat footer. Feels like a proper SaaS homepage.   */
-
 .footer {
   background: rgba(15, 23, 42, 0.96);
   color: rgba(255,255,255,.65);
@@ -682,7 +597,7 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 
 .footer-logo {
   width: 40px; height: 40px;
-  background: linear-gradient(135deg, #ea580c, #f97316);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -729,7 +644,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   color: rgba(255,255,255,.45);
 }
 
-/* gradient line on top of footer */
 .footer::before {
   content: '';
   position: absolute;
@@ -739,21 +653,16 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   opacity: 0.8;
 }
 
-
-/* ── Auth pages (login, register, activation, logout) ──────────────
-   Complete redesign — split layout on desktop, animated blobs,
-   glass card on the right.                                          */
-
 .auth-split-wrapper {
   display: flex;
-  flex-direction: column; /* stacked on mobile */
-  min-height: calc(100vh - 86px); /* account for standard navbar */
+  flex-direction: column; 
+  min-height: calc(100vh - 86px); 
   background: var(--clr-background);
 }
 
 @media (min-width: 992px) {
   .auth-split-wrapper {
-    flex-direction: row; /* split on desktop */
+    flex-direction: row; 
   }
 }
 
@@ -768,7 +677,7 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 }
 
 .auth-split-showcase {
-  display: none; /* hidden on mobile */
+  display: none; 
   flex: 1;
   background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(234, 88, 12, 0.85)), url('https://images.unsplash.com/photo-1541339907198-e08756dedf3f?auto=format&fit=crop&q=80') center/cover;
   position: relative;
@@ -866,20 +775,19 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   box-shadow: 0 12px 40px rgba(234, 88, 12, 0.15);
 }
 
-/* gradient top accent on auth card */
 .auth-card::before {
   content: '';
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #ea580c, #f97316);
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
   border-radius: var(--radius-lg) var(--radius-lg) 0 0;
 }
 
 .auth-logo-block {
   width: 48px;
   height: 48px;
-  background: linear-gradient(135deg, #ea580c, #f97316);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   border-radius: 12px;
   margin: 0 auto 1.25rem;
   display: flex;
@@ -891,8 +799,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   font-size: 1.15rem;
   box-shadow: 0 4px 14px rgba(234,88,12,.25);
 }
-
-/* ensure the logo block is always visible now */
 
 .auth-title { font-size: 1.8rem; font-weight: 800; text-align: center; margin-bottom: 0.2rem; letter-spacing: -0.5px; color: var(--clr-text); }
 .auth-subtitle { text-align: center; color: rgba(30,41,59,0.5); font-weight: 400; font-size: 0.95rem; margin-bottom: 2rem; }
@@ -914,11 +820,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   text-decoration: none;
 }
 
-
-/* ── Welcome banner ────────────────────────────────────────────────
-   Shows up on the dashboard when there's nothing to display yet.
-   Better gradient with animated floating particles.                 */
-
 .welcome-banner {
   background: linear-gradient(135deg, #1e3a8a 0%, #ea580c 50%, #f97316 100%);
   background-size: 200% 200%;
@@ -932,7 +833,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   box-shadow: 0 8px 30px rgba(234, 88, 12, 0.2);
 }
 
-/* decorative circles — two of them now, different sizes */
 .welcome-banner::before {
   content: '';
   position: absolute;
@@ -962,10 +862,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .welcome-banner h2 { font-size: 1.5rem; color: #fff; margin-bottom: 0.4rem; position: relative; z-index: 1; }
 .welcome-banner p  { color: rgba(255,255,255,.75); margin: 0; font-size: 0.9rem; position: relative; z-index: 1; }
 
-
-/* ── Section headings ──────────────────────────────────────────────
-   Those small uppercase labels with a line after them.              */
-
 .section-heading {
   font-size: 0.75rem;
   font-weight: 600;
@@ -984,9 +880,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   background: linear-gradient(90deg, var(--clr-border), transparent);
 }
 
-
-/* ── Page title bar ────────────────────────────────────────────────  */
-
 .page-header {
   display: flex;
   align-items: center;
@@ -998,9 +891,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 }
 
 .page-header h2 { margin: 0; font-size: 1.4rem; }
-
-
-/* ── User Dashboard (Interactive Profile) ──────────────────────────── */
 
 .dashboard-header {
   display: flex;
@@ -1070,7 +960,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   margin-top: 4px;
 }
 
-/* Updated Table Wrap for Dashboard */
 .dash-table-card {
   background: var(--clr-surface);
   border: 1px solid var(--clr-border);
@@ -1090,10 +979,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   letter-spacing: 0.5px;
   color: var(--clr-text-muted);
 }
-
-
-/* ── Workshop type grid (Redesign) ───────────────────────────────────
-   Replaces the simple list rows with full responsive CSS cards.     */
 
 .wtype-grid {
   display: grid;
@@ -1177,9 +1062,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   font-weight: 600;
 }
 
-
-/* ── Jumbotron (public landing pages) ──────────────────────────── */
-
 .jumbotron {
   background: linear-gradient(135deg, var(--clr-primary-lt), #dbeafe);
   border: 1px solid rgba(199,217,251,.6);
@@ -1189,10 +1071,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 }
 .jumbotron h1 { font-size: 1.4rem; color: var(--clr-primary-dk); margin-bottom: 0.5rem; }
 .jumbotron p  { color: var(--clr-text-muted); margin: 0; }
-
-
-/* ── Detail panels ─────────────────────────────────────────────────
-   Key-value layout used on workshop details, profile view, etc.     */
 
 .detail-panel {
   background: var(--clr-surface);
@@ -1229,12 +1107,8 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 }
 .detail-value { font-weight: 500; font-size: 0.9rem; }
 
-
-/* ── Profile page ──────────────────────────────────────────────────
-   Better gradient with the secondary purple, plus hover lift.       */
-
 .profile-header {
-  background: linear-gradient(135deg, #ea580c, #f97316);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   padding: 1.75rem;
   border-radius: var(--radius-md) var(--radius-md) 0 0;
   display: flex;
@@ -1244,7 +1118,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   overflow: hidden;
 }
 
-/* decorative element */
 .profile-header::before {
   content: '';
   position: absolute;
@@ -1279,9 +1152,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .profile-name { color: #fff; font-family: var(--font-head); font-weight: 600; font-size: 1.15rem; margin: 0; }
 .profile-sub  { color: rgba(255,255,255,.7); font-size: 0.82rem; margin: 2px 0 0; }
 
-
-/* ── Comment cards (workshop details page) ─────────────────────── */
-
 .comment-card {
   background: var(--clr-surface);
   backdrop-filter: blur(8px);
@@ -1312,14 +1182,8 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .comment-entry:last-child { border-bottom: none; }
 .comment-meta { font-size: 0.75rem; color: var(--clr-text-muted); margin-bottom: 4px; }
 
-
-/* ── Form validation errors ────────────────────────────────────── */
-
 .errorlist { list-style: none; padding: 0; margin: 4px 0 0; }
 .errorlist li { color: var(--clr-danger); font-size: 0.8rem; }
-
-
-/* ── Modals (terms & conditions, etc.) ─────────────────────────── */
 
 .modal-content {
   border: none;
@@ -1331,9 +1195,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .modal-header { border-bottom: 1px solid var(--clr-border); padding: 1rem 1.25rem; }
 .modal-body { padding: 1.25rem; }
 .modal-title { font-family: var(--font-head); font-weight: 600; font-size: 1rem; }
-
-
-/* ── Stats cards (statistics page) ─────────────────────────────── */
 
 .stat-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(165px, 1fr)); gap: 1rem; margin-bottom: 1.5rem; }
 
@@ -1354,7 +1215,7 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   position: absolute;
   top: 0; left: 0; right: 0;
   height: 3px;
-  background: linear-gradient(90deg, #ea580c, #f97316);
+  background: linear-gradient(90deg, #4f46e5, #6366f1);
   opacity: 0;
   transition: opacity var(--transition);
 }
@@ -1372,7 +1233,7 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   font-family: var(--font-head);
   font-size: 2.1rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #ea580c, #f97316);
+  background: linear-gradient(135deg, #4f46e5, #6366f1);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -1380,13 +1241,8 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 }
 .stat-card .sc-label { font-size: 0.78rem; color: var(--clr-text-muted); margin-top: 6px; }
 
-
-/* ── Responsive adjustments ────────────────────────────────────────
-   Nothing fancy — just tighten up spacing and stack things
-   vertically when the screen gets narrow.                           */
-
 @media (max-width: 900px) {
-  /* stack the auth layout on tablets/phones */
+
   .auth-centered-wrapper { padding: 1.5rem; }
   .auth-card { padding: 2rem 1.5rem; }
 }
@@ -1412,7 +1268,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   .bg-blob-2 { width: 250px; height: 250px; }
   .bg-blob-3 { display: none; }
 
-  /* hide brand panel completely on small screens */
   .auth-split-showcase { display: none; }
 }
 
@@ -1420,9 +1275,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
   .auth-card { border-radius: var(--radius-md); }
   .btn { padding: 0.5rem 0.9rem; font-size: 0.85rem; }
 }
-
-
-/* ── Utility overrides ─────────────────────────────────────────── */
 
 .text-muted { color: var(--clr-text-muted) !important; }
 .text-primary { color: var(--clr-primary) !important; }
@@ -1432,7 +1284,6 @@ label.required::after { content: " *"; color: var(--clr-danger); }
 .mb-3 { margin-bottom: 1rem !important; }
 .mx-4 { margin-left: 1.25rem !important; margin-right: 1.25rem !important; }
 
-/* stagger animation delays for lists */
 .detail-row:nth-child(1) { animation-delay: 0.05s; }
 .detail-row:nth-child(2) { animation-delay: 0.10s; }
 .detail-row:nth-child(3) { animation-delay: 0.15s; }

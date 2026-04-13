@@ -41,7 +41,7 @@ python manage.py runserver
 ```
 
 Then just load up ` and we're good to go.
-http://127.0.0.1:8000/`
+http://127.0.0.1:8000/
 ## Mobile Access & Verification
 
 This project is fully responsive and has been verified to work on mobile devices. You can access the platform on your local network using the following details:
@@ -62,7 +62,7 @@ graph TD
     B -- Yes --> D[User Dashboard]
     C --> D
     D --> E[Browse Workshops]
-    E --> F[Workshop Details]
+    E` --> F[Workshop Details]
     F --> G[Propose/Manage Workshops]
     G --> H{Workshop Completed?}
     H -- Yes --> I[Download Certificate]
@@ -85,5 +85,10 @@ The interface has been modernized with a professional split-screen entry, dark m
 ![Split Screen Login](docs/screenshots/after_login.png)
 
 #### Enhanced Workshop Discovery
-![Workshop Grid](docs/screenshots/after_workshops.png)
-
+![alt text](image-2.png)
+![alt text](image-3.png)
+![alt text](image-4.png)
+![alt text](image-5.png)
+![alt text](image-6.png)
+![alt text](image-7.png)
+![alt text](image-8.png)

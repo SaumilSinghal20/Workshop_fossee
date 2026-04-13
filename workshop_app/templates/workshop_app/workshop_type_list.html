@@ -4,7 +4,7 @@
 {% block title %}Workshop Types{% endblock %}
 
 {% block extra-dependencies %}
-    <!-- react 18 from CDN — only used on this page for the live search -->
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
 {% endblock %}
@@ -32,10 +32,8 @@
         {% endif %}
     </div>
 
-    <!-- the React search component renders into this div -->
     <div id="react-workshop-search"></div>
 
-    <!-- workshop data for the React component to pick up (hidden from view) -->
     <div id="wtype-rows-source" style="display:none" aria-hidden="true">
         {% for w in workshop_type %}
         <div data-wtype-row
@@ -66,7 +64,6 @@
         {% endfor %}
     </div>
 
-    <!-- fallback for folks with JS disabled — same list, just without the search bar -->
     <noscript>
         <div class="wtype-grid" style="margin-top:2rem;">
             {% for w in workshop_type %}
@@ -92,7 +89,6 @@
         </div>
     </noscript>
 
-    <!-- page navigation -->
     {% if workshop_type.paginator.num_pages > 1 %}
     <nav aria-label="Pagination" style="margin-top:1.25rem">
         <ul class="pagination">
@@ -120,6 +116,6 @@
 </div>
 
 <script>
-// React component handles its own layout now via grid.
+
 </script>
 {% endblock %}

@@ -4,28 +4,26 @@
 {% block title %}Modern Workshop Discovery{% endblock %}
 
 {% block extra-dependencies %}
-    <!-- React 18 & ReactDOM -->
+
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    
-    <!-- Babel Standalone for JSX transformation in the browser -->
+
     <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 {% endblock %}
 
 {% block extra-custom-scripts %}
     <script>
-        // Injecting real Django data into global scope for React to consume
         window.DJANGO_WORKSHOPS = {{ workshops_json|safe }};
         window.DJANGO_USER = {{ user_json|safe }};
+        window.DJANGO_START_SCREEN = "{{ start_screen }}";
     </script>
-    
-    <!-- Load the JSX component -->
+
     <script type="text/babel" src="{% static 'workshop_app/js/WorkshopApp.jsx' %}" data-presets="react"></script>
 {% endblock %}
 
 {% block content %}
 <div id="workshop-app-root">
-    <!-- React app renders here -->
+
     <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; min-height:60vh; color:var(--clr-text-muted);">
         <div class="spinner-border text-primary" role="status" style="margin-bottom:1rem;"></div>
         <p>Initializing Modern Experience...</p>
@@ -33,17 +31,19 @@
 </div>
 
 <style>
-    /* Scoped styles for the React component cards to match the existing design system */
+
+    .base-content { padding-top: 68px !important; }
+    
     .modern-card {
         border: 1px solid var(--clr-border) !important;
         background-color: var(--clr-card-bg) !important;
     }
-    
+
     .dark-theme .modern-card {
         background-color: #1e1e1e !important;
         border-color: #333 !important;
     }
-    
+
     .dark-theme .modern-card h6, 
     .dark-theme .modern-card p,
     .dark-theme .modern-card div {

@@ -65,7 +65,6 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -144,16 +143,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# STATIC_ROOT is where collectstatic will gather files
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
-
-# STATICFILES_DIRS is where Django looks for static files in addition to app static/ directories
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'workshop_app/static/'),
-]
-
-# Configure WhiteNoise to serve compressed static files
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+STATIC_ROOT = 'workshop_app/static/'
 
 LOGIN_URL = '/workshop/login/'
 

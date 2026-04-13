@@ -31,8 +31,51 @@
     <link rel="stylesheet" href="{% static 'workshop_app/css/font-awesome.css' %}">
     <link rel="stylesheet" href="{% static 'workshop_app/css/base.css' %}">
 
-    {% block extra-custom-scripts %}{% endblock %}
+    <style>
+        .search-suggestions-container {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--clr-border);
+            border-radius: 0 0 12px 12px;
+            box-shadow: var(--shadow-lg);
+            margin-top: 4px;
+            z-index: 2000;
+            max-height: 300px;
+            overflow-y: auto;
+            display: none;
+        }
+        .dark-theme .search-suggestions-container {
+            background: rgba(30, 41, 59, 0.95);
+        }
+        .suggestion-item {
+            padding: 10px 16px;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--clr-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .suggestion-item:hover, .suggestion-item.active {
+            background: var(--clr-primary-lt);
+            color: var(--clr-primary);
+        }
+        .suggestion-icon {
+            font-size: 16px;
+            color: var(--clr-text-muted);
+        }
+        .suggestion-item.active .suggestion-icon {
+            color: var(--clr-primary);
+        }
+    </style>
+
     {% block extra-dependencies %}{% endblock %}
+    {% block extra-custom-scripts %}{% endblock %}
 
     <!-- js libraries -->
     <script src="{% static 'workshop_app/js/jquery-3.4.1.min.js' %}"></script>
@@ -72,7 +115,11 @@
         <!-- left side public links -->
         <ul class="navbar-nav mr-auto">
             <li class="nav-item">
+                {% if user.is_authenticated %}
+                <a class="nav-link" href="{% url 'workshop_app:modern_discovery' %}">Home</a>
+                {% else %}
                 <a class="nav-link" href="/">Home</a>
+                {% endif %}
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="{% url 'workshop_app:modern_discovery' %}">Discovery</a>
@@ -86,7 +133,7 @@
         </ul>
 
         <!-- Mobile search bar -->
-        <form class="form-inline d-lg-none my-2" action="/" method="GET" style="position:relative;">
+        <form class="form-inline d-lg-none my-2" action="{% url 'workshop_app:modern_discovery' %}" method="GET" style="position:relative;">
             <input class="form-control w-100" type="search" name="q" placeholder="Search workshops..." aria-label="Search workshops" style="border-radius:20px; padding: 0.4rem 1rem 0.4rem 2.25rem; border:1px solid rgba(255,255,255,0.25); background:rgba(0,0,0,0.15); color:#fff; font-size:0.85rem;">
             <span class="material-icons" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.7); font-size:18px; pointer-events:none;">search</span>
         </form>
@@ -150,10 +197,11 @@
     </div>
 
     <!-- Desktop absolute center search bar -->
-    <div class="d-none d-lg-block position-absolute" style="left: 50%; transform: translateX(-50%); z-index: 10;">
-        <form class="form-inline" action="/" method="GET" style="position:relative;">
-            <input class="form-control" type="search" name="q" placeholder="Search workshops..." aria-label="Search workshops" style="border-radius:20px; padding: 0.4rem 1rem 0.4rem 2.25rem; border:1px solid rgba(255,255,255,0.25); background:rgba(0,0,0,0.15); color:#fff; font-size:0.85rem; transition: background 0.2s, border 0.2s; width: 250px;" onfocus="this.style.background='rgba(0,0,0,0.3)'; this.style.borderColor='var(--clr-primary)';">
+    <div class="d-none d-lg-block position-absolute" style="left: 50%; transform: translateX(-50%); z-index: 1010;">
+        <form class="form-inline global-search-form" action="{% url 'workshop_app:modern_discovery' %}" method="GET" style="position:relative;">
+            <input class="form-control global-search-input" type="search" name="q" placeholder="Search workshops..." aria-label="Search workshops" autocomplete="off" style="border-radius:20px; padding: 0.4rem 1rem 0.4rem 2.25rem; border:1px solid rgba(255,255,255,0.25); background:rgba(0,0,0,0.15); color:#fff; font-size:0.85rem; transition: background 0.2s, border 0.2s; width: 250px;" onfocus="this.style.background='rgba(0,0,0,0.3)'; this.style.borderColor='var(--clr-primary)';">
             <span class="material-icons" style="position:absolute; left:12px; top:50%; transform:translateY(-50%); color:rgba(255,255,255,0.7); font-size:18px; pointer-events:none;">search</span>
+            <div class="search-suggestions-container"></div>
         </form>
     </div>
 </nav>
@@ -243,6 +291,84 @@ toastr.options = {
                     localStorage.setItem('theme', isDark ? 'dark' : 'light');
                     updateIcons(isDark);
                 });
+            });
+        });
+    </script>
+
+    <!-- Global Search Suggestions Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.querySelector('.global-search-form');
+            const searchInput = document.querySelector('.global-search-input');
+            const suggestionsBox = document.querySelector('.search-suggestions-container');
+            let suggestions = [];
+            let activeIndex = -1;
+
+            // Fetch suggestions once
+            fetch('{% url "workshop_app:api_workshop_suggestions" %}')
+                .then(res => res.json())
+                .then(data => {
+                    suggestions = data.suggestions;
+                });
+
+            function showSuggestions(val) {
+                if (!val) {
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+                const matches = suggestions.filter(s => s.toLowerCase().includes(val.toLowerCase()));
+                if (matches.length > 0) {
+                    suggestionsBox.innerHTML = matches.map((m, i) => `
+                        <div class="suggestion-item" data-index="${i}">
+                            <span class="material-icons suggestion-icon">school</span>
+                            <span>${m}</span>
+                        </div>
+                    `).join('');
+                    suggestionsBox.style.display = 'block';
+                    activeIndex = -1;
+                } else {
+                    suggestionsBox.style.display = 'none';
+                }
+            }
+
+            searchInput.addEventListener('input', (e) => showSuggestions(e.target.value));
+
+            searchInput.addEventListener('keydown', (e) => {
+                const items = suggestionsBox.querySelectorAll('.suggestion-item');
+                if (e.key === 'ArrowDown') {
+                    activeIndex = Math.min(activeIndex + 1, items.length - 1);
+                    updateActive(items);
+                    e.preventDefault();
+                } else if (e.key === 'ArrowUp') {
+                    activeIndex = Math.max(activeIndex - 1, -1);
+                    updateActive(items);
+                    e.preventDefault();
+                } else if (e.key === 'Enter' && activeIndex > -1) {
+                    searchInput.value = items[activeIndex].querySelector('span:not(.material-icons)').textContent;
+                    searchForm.submit();
+                    e.preventDefault();
+                }
+            });
+
+            function updateActive(items) {
+                items.forEach((item, i) => {
+                    item.classList.toggle('active', i === activeIndex);
+                    if (i === activeIndex) item.scrollIntoView({ block: 'nearest' });
+                });
+            }
+
+            suggestionsBox.addEventListener('click', (e) => {
+                const item = e.target.closest('.suggestion-item');
+                if (item) {
+                    searchInput.value = item.querySelector('span:not(.material-icons)').textContent;
+                    searchForm.submit();
+                }
+            });
+
+            document.addEventListener('click', (e) => {
+                if (!searchForm.contains(e.target)) {
+                    suggestionsBox.style.display = 'none';
+                }
             });
         });
     </script>

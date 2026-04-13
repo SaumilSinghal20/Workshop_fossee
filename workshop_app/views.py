@@ -50,28 +50,16 @@ def is_instructor(user):
 
 
 def get_landing_page(user):
-    # For now, landing pages of both instructor and coordinator are same
-    if is_instructor(user):
-        return reverse('workshop_app:workshop_status_instructor')
-    return reverse('workshop_app:workshop_status_coordinator')
+    """Return the primary dashboard URL for authenticated users."""
+    return reverse('workshop_app:index')
 
 
 # View functions
 
 def index(request):
-    """Landing Page : Redirect to login page if not logged in
-                      Redirect to respective landing page according to position"""
-    user = request.user
-    
-    # Showcase flow: automatically reset session on return
-    if user.is_authenticated and user.username == 'showcase_admin':
-        from django.contrib.auth import logout
-        logout(request)
-        return redirect(reverse('workshop_app:login'))
-    if user.is_authenticated and is_email_checked(user):
-        return redirect(get_landing_page(user))
-
-    return redirect(reverse('workshop_app:login'))
+    """Landing Page: Render the modern discovery landing page."""
+    start_screen = 'dashboard' if request.user.is_authenticated else 'landing'
+    return modern_discovery(request, start_screen=start_screen)
 
 
 # User views
@@ -102,9 +90,9 @@ def user_login(request):
 
 
 def user_logout(request):
-    """Logout"""
+    """Logout and redirect to login."""
     logout(request)
-    return render(request, 'workshop_app/logout.html')
+    return redirect(reverse('workshop_app:login'))
 
 
 def activate_user(request, key=None):
@@ -420,7 +408,7 @@ def workshop_type_list(request):
     return render(request, 'workshop_app/workshop_type_list.html', {'workshop_type': workshop_type})
 
 
-def modern_discovery(request):
+def modern_discovery(request, start_screen='dashboard'):
     """Modern React-based workshop discovery interface."""
     workshop_types = WorkshopType.objects.all().order_by("id")
     # Mapping real data for the React component
@@ -455,7 +443,8 @@ def modern_discovery(request):
             'institute': getattr(request.user.profile, 'institute', 'IIT Bombay'),
             'department': getattr(request.user.profile, 'department', 'Computer Science'),
             'position': getattr(request.user.profile, 'position', 'Coordinator'),
-        }, cls=DjangoJSONEncoder) if request.user.is_authenticated else "null"
+        }, cls=DjangoJSONEncoder) if request.user.is_authenticated else "null",
+        'start_screen': start_screen
     }
     return render(request, 'workshop_app/modern_discovery.html', context)
 
@@ -551,5 +540,10 @@ def view_own_profile(request):
 
 
 def certificate_mockup(request):
-    return render(request, workshop_app/certificate.html)
+    return render(request, 'workshop_app/certificate.html')
+
+def api_workshop_suggestions(request):
+    """Returns a list of workshop names for autocomplete suggestions."""
+    names = list(WorkshopType.objects.values_list('name', flat=True))
+    return JsonResponse({'suggestions': names})
 

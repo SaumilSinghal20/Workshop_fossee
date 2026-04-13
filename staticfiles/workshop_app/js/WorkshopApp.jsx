@@ -1,6 +1,5 @@
 const { useState } = React;
 
-/* ─── Design Tokens ─── */
 const BRAND   = "#1a1d2e";
 const ACCENT  = "#4f6ef7";
 const SUCCESS = "#22c55e";
@@ -8,20 +7,17 @@ const DANGER  = "#ef4444";
 const WARN    = "#f59e0b";
 const MUTED   = "#6b7280";
 
-/* Category → gradient map so each card has a unique feel */
-const CAT_GRADIENT = {
-  "Computer Science":       "linear-gradient(135deg,#4f6ef7 0%,#7c3aed 100%)",
-  "Information Technology": "linear-gradient(135deg,#0ea5e9 0%,#4f6ef7 100%)",
-  "Electronics":            "linear-gradient(135deg,#f59e0b 0%,#ef4444 100%)",
-  "Mechanical Engineering": "linear-gradient(135deg,#10b981 0%,#0ea5e9 100%)",
-  "Electrical Engineering": "linear-gradient(135deg,#8b5cf6 0%,#ec4899 100%)",
-  "Biosciences":            "linear-gradient(135deg,#22c55e 0%,#0ea5e9 100%)",
-  "Technical":              "linear-gradient(135deg,#f59e0b 0%,#ef4444 100%)",
-  "Core":                   "linear-gradient(135deg,#4f6ef7 0%,#0ea5e9 100%)",
+const CAT_IMAGE = {
+  "Computer Science":       "https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=600",
+  "Information Technology": "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=600",
+  "Electronics":            "https://images.unsplash.com/photo-1517077304055-6e89abbf09b0?q=80&w=600",
+  "Mechanical Engineering": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?q=80&w=600",
+  "Electrical Engineering": "https://images.unsplash.com/photo-1454165833767-027ffea9e67a?q=80&w=600",
+  "Biosciences":            "https://images.unsplash.com/photo-1532187863486-abf9bdad1b4c?q=80&w=600",
+  "Technical":              "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=600",
+  "Core":                   "https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=600",
 };
-const DEFAULT_GRADIENT = "linear-gradient(135deg,#4f6ef7 0%,#7c3aed 100%)";
 
-/* Category icons (Material Icons names) */
 const CAT_ICON = {
   "Computer Science":       "code",
   "Information Technology": "language",
@@ -35,55 +31,54 @@ const CAT_ICON = {
 
 const LEVEL_COLOR = { Beginner: SUCCESS, Intermediate: WARN, Advanced: DANGER };
 
-/* ─── Data ─── */
 const MOCK_WORKSHOPS = [
   {
-    id:1, title:"Python for Data Science",
-    category:"Computer Science", duration:"3 days, 8 hrs/day",
+    id:1, title:"Mastering Python for Data Science",
+    category:"Computer Science", duration:"Join us for 3 intense, rewarding days",
     instructor:"Dr. Ananya Sharma",
     available:["2026-05-10","2026-05-24","2026-06-07"],
     seats:60, booked:43, level:"Intermediate",
-    description:"Gain hands-on experience with NumPy, Pandas, Matplotlib, and scikit-learn using real-world datasets. You will build complete data pipelines — from raw CSV to trained ML model — and learn how to communicate findings with compelling visualisations.",
+    description:"Elevate your data skills. We'll dive deep into NumPy, Pandas, and Scikit-learn, transforming raw data into meaningful insights. It's not just about code; it's about telling a story with data that drives real change.",
   },
   {
-    id:2, title:"Web Development with Django",
-    category:"Information Technology", duration:"2 days, 8 hrs/day",
+    id:2, title:"Full-Stack Journey with Django",
+    category:"Information Technology", duration:"2 days of hands-on building",
     instructor:"Prof. Rajan Mehta",
     available:["2026-05-15","2026-06-01","2026-06-20"],
     seats:50, booked:21, level:"Beginner",
-    description:"Build and deploy a full-stack web application from scratch using Django. The workshop covers models, views, URL routing, template inheritance, user authentication, and cloud deployment on a live server — all within two focused days.",
+    description:"Ever wanted to build your own web application from scratch? This weekend, we'll do exactly that. We'll guide you through every step of Django, from the first line of code to a live, breathing application.",
   },
   {
-    id:3, title:"Embedded Systems & IoT",
-    category:"Electronics", duration:"3 days, 6 hrs/day",
+    id:3, title:"Hands-on IoT & Embedded Systems",
+    category:"Electronics", duration:"3 days of physical prototyping",
     instructor:"Dr. Priya Nair",
     available:["2026-05-20","2026-06-10"],
     seats:40, booked:38, level:"Advanced",
-    description:"Bridge the gap between hardware and software. You'll program microcontrollers, wire sensors and actuators, and push live telemetry to the cloud over MQTT. Participants leave with a working IoT prototype they built themselves.",
+    description:"Bring your ideas to life. We'll bridge the gap between software and the physical world. You'll work with real hardware, sensors, and cloud telemetry, leaving with a prototype you actually built yourself.",
   },
   {
-    id:4, title:"CFD with OpenFOAM",
-    category:"Mechanical Engineering", duration:"4 days, 8 hrs/day",
+    id:4, title:"Fluid Dynamics with OpenFOAM",
+    category:"Mechanical Engineering", duration:"4 days of simulation mastery",
     instructor:"Prof. Aditya Kulkarni",
     available:["2026-06-05","2026-06-25"],
     seats:35, booked:12, level:"Advanced",
-    description:"Master computational fluid dynamics using the industry-standard open-source toolkit OpenFOAM. Topics include geometry preparation, meshing with snappyHexMesh, solver configuration, boundary conditions, and results post-processing in ParaView.",
+    description:"Master the art of computational fluid dynamics. Using OpenFOAM, we'll explore geometry, meshing, and solver configuration. It's a deep dive into the industry-standard toolkit for engineering excellence.",
   },
   {
-    id:5, title:"VLSI Design Fundamentals",
-    category:"Electrical Engineering", duration:"2 days, 7 hrs/day",
+    id:5, title:"Modern VLSI Design Flow",
+    category:"Electrical Engineering", duration:"2 days of silicon innovation",
     instructor:"Dr. Kavitha Iyer",
     available:["2026-05-28","2026-06-18"],
     seats:45, booked:30, level:"Intermediate",
-    description:"Walk through the complete ASIC design flow — from RTL coding in Verilog, through logic synthesis, static timing analysis, and place-and-route — culminating in a physical design ready for tape-out using open-source EDA tools.",
+    description:"Step into the world of semiconductor design. We'll walk through the complete ASIC flow, from RTL to final layout. Experience the thrill of designing hardware using high-end open-source EDA tools.",
   },
   {
-    id:6, title:"Bioinformatics with R",
-    category:"Biosciences", duration:"2 days, 8 hrs/day",
+    id:6, title:"Bioinformatics Essentials with R",
+    category:"Biosciences", duration:"2 days of genomic exploration",
     instructor:"Dr. Sneha Reddy",
     available:["2026-06-12","2026-07-02"],
     seats:30, booked:8, level:"Beginner",
-    description:"Analyse genomic datasets end-to-end using R and the Bioconductor ecosystem. You will perform quality control, differential gene expression analysis, pathway enrichment, and produce publication-ready heatmaps and volcano plots.",
+    description:"Unlock the secrets of the genome. We'll use R and Bioconductor to analyze complex biological datasets. By the end, you'll be producing publication-ready visualizations and gene expression profiles.",
   },
 ];
 
@@ -101,7 +96,6 @@ const MOCK_USER = window.DJANGO_USER || {
 const fmtDate = d =>
   new Date(d).toLocaleDateString("en-IN",{weekday:"short",day:"numeric",month:"long",year:"numeric"});
 
-/* ─── Reusable Badge ─── */
 function Badge({ label, bg, small=false }) {
   return (
     <span style={{
@@ -116,7 +110,6 @@ function Badge({ label, bg, small=false }) {
   );
 }
 
-/* ─── Seat Availability Bar ─── */
 function SeatBar({ booked, seats }) {
   const pct   = Math.round((booked / seats) * 100);
   const color = pct >= 90 ? DANGER : pct >= 65 ? WARN : SUCCESS;
@@ -140,11 +133,10 @@ function SeatBar({ booked, seats }) {
   );
 }
 
-/* ─── Workshop Card ─── */
 function WorkshopCard({ w, onBook }) {
   const [hovered, setHovered] = useState(false);
   const full = w.booked >= w.seats;
-  const gradient = CAT_GRADIENT[w.category] || DEFAULT_GRADIENT;
+  const image    = CAT_IMAGE[w.category] || CAT_IMAGE["Core"];
   const icon     = CAT_ICON[w.category] || "school";
   const levelColor = LEVEL_COLOR[w.level] || SUCCESS;
 
@@ -155,144 +147,149 @@ function WorkshopCard({ w, onBook }) {
       onMouseLeave={() => setHovered(false)}
       style={{
         background:"#fff",
-        borderRadius:12,
+        borderRadius:16,
         overflow:"hidden",
         display:"flex",
         flexDirection:"column",
         cursor: full ? "default" : "pointer",
         boxShadow: hovered
-          ? "0 12px 40px rgba(0,0,0,.14)"
-          : "0 2px 12px rgba(0,0,0,.06)",
-        transform: hovered ? "translateY(-3px)" : "translateY(0)",
-        transition:"all .25s ease",
-        border:"1px solid #e5e7eb",
+          ? "0 20px 40px rgba(0,0,0,.18)"
+          : "0 4px 15px rgba(0,0,0,.04)",
+        transform: hovered ? "translateY(-6px)" : "translateY(0)",
+        transition:"all .4s cubic-bezier(0.165, 0.84, 0.44, 1)",
+        border:"1px solid #f0f0f0",
       }}
     >
-      {/* ── Gradient header banner ── */}
       <div style={{
-        background: gradient,
-        padding:"22px 20px 16px",
+        height:180,
         position:"relative",
-        minHeight:96,
+        overflow:"hidden",
       }}>
-        {/* translucent circle decoration */}
+        <img 
+          src={image} 
+          alt={w.title}
+          style={{
+            width:"100%", height:"100%", objectFit:"cover",
+            transform: hovered ? "scale(1.08)" : "scale(1)",
+            transition:"transform .6s ease",
+          }}
+        />
         <div style={{
-          position:"absolute", top:-20, right:-20,
-          width:100, height:100, borderRadius:"50%",
-          background:"rgba(255,255,255,.08)",
-        }}/>
-        <div style={{
-          position:"absolute", bottom:-10, left:60,
-          width:60, height:60, borderRadius:"50%",
-          background:"rgba(255,255,255,.06)",
-        }}/>
+          position:"absolute", top:12, left:12,
+          background:"rgba(255,255,255,0.85)",
+          backdropFilter:"blur(8px)",
+          padding:"5px 10px", borderRadius:10,
+          display:"flex", alignItems:"center", gap:6,
+          boxShadow:"0 4px 10px rgba(0,0,0,0.1)",
+        }}>
+          <img src="/static/workshop_app/img/fossee_logo.png" alt="FOSSEE" style={{height:18}} />
+          <span style={{fontSize:10, fontWeight:700, color:BRAND, textTransform:"uppercase", letterSpacing:0.5}}>IIT Bombay</span>
+        </div>
 
-        {/* icon + level badge row */}
-        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
-          <div style={{
-            width:40, height:40, borderRadius:10,
-            background:"rgba(255,255,255,.2)",
-            display:"flex", alignItems:"center", justifyContent:"center",
-          }}>
-            <span className="material-icons" style={{fontSize:22,color:"#fff"}}>{icon}</span>
-          </div>
+        <div style={{ position:"absolute", top:12, right:12 }}>
           <Badge
             label={w.level}
             bg={full ? "#6b7280" : levelColor}
           />
         </div>
 
-        {/* title */}
-        <h6 style={{
-          margin:0, fontSize:16, fontWeight:700,
-          color:"#fff", lineHeight:1.35,
-          textShadow:"0 1px 3px rgba(0,0,0,.2)",
+        <div style={{
+          position:"absolute", bottom:0, left:0, right:0,
+          background:"linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0) 100%)",
+          padding:"40px 18px 16px",
         }}>
-          {w.title}
-        </h6>
-
-        {/* category chip */}
-        <div style={{marginTop:6}}>
-          <span style={{
-            fontSize:11, color:"rgba(255,255,255,.8)",
-            background:"rgba(255,255,255,.15)",
-            borderRadius:20, padding:"2px 9px", fontWeight:500,
+          <h6 style={{
+            margin:0, fontSize:19, fontWeight:700,
+            color:"#fff", lineHeight:1.3,
+            letterSpacing:"-0.01em",
           }}>
-            {w.category}
-          </span>
+            {w.title}
+          </h6>
         </div>
       </div>
 
-      {/* ── Body ── */}
-      <div style={{padding:"16px 18px",flex:1,display:"flex",flexDirection:"column",gap:12}}>
+      <div style={{padding:"20px",flex:1,display:"flex",flexDirection:"column",gap:16}}>
+        
+        <div style={{display:"flex", alignItems:"center", gap:8}}>
+          <div style={{
+            width:28, height:28, borderRadius:8,
+            background:"#f3f4f6",
+            display:"flex", alignItems:"center", justifyContent:"center",
+          }}>
+            <span className="material-icons" style={{fontSize:16, color:ACCENT}}>{icon}</span>
+          </div>
+          <span style={{fontSize:12, fontWeight:600, color:MUTED, textTransform:"uppercase", letterSpacing:"0.03em"}}>
+            {w.category}
+          </span>
+        </div>
 
-        {/* Description — full text, not truncated */}
         <p style={{
-          margin:0, fontSize:13.5, color:"#374151",
-          lineHeight:1.65, flex:1,
+          margin:0, fontSize:14, color:"#4b5563",
+          lineHeight:1.6, flex:1, opacity:0.9,
         }}>
           {w.description}
         </p>
 
-        {/* Meta row: instructor + duration */}
         <div style={{
-          display:"flex", gap:12, flexWrap:"wrap",
-          padding:"10px 12px",
-          background:"#f9fafb",
-          borderRadius:8,
-          border:"1px solid #f0f0f0",
+          display:"flex", alignItems:"center", gap:8,
+          padding:"12px 14px",
+          background:"#f8fafc",
+          borderRadius:12,
+          border:"1px solid #edf2f7",
         }}>
-          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:12.5,color:"#374151"}}>
-            <span className="material-icons" style={{fontSize:15,color:ACCENT}}>person</span>
+          <span className="material-icons" style={{fontSize:18,color:ACCENT}}>auto_awesome</span>
+          <span style={{fontSize:13, fontWeight:600, color:BRAND}}>{w.duration}</span>
+        </div>
+
+        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", paddingTop:4 }}>
+          <div style={{display:"flex",alignItems:"center",gap:6,fontSize:13,color:"#374151"}}>
+            <div style={{width:24, height:24, borderRadius:"50%", background:ACCENT, color:"#fff", display:"flex", alignItems:"center", justifyContent:"center", fontSize:12, fontWeight:700}}>
+              {w.instructor.split(" ").pop()[0]}
+            </div>
             <span style={{fontWeight:500}}>{w.instructor}</span>
           </div>
-          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:12.5,color:"#374151"}}>
-            <span className="material-icons" style={{fontSize:15,color:ACCENT}}>schedule</span>
-            <span>{w.duration}</span>
-          </div>
-          <div style={{display:"flex",alignItems:"center",gap:5,fontSize:12.5,color:"#374151"}}>
-            <span className="material-icons" style={{fontSize:15,color:ACCENT}}>event</span>
-            <span>{w.available.length} date{w.available.length !== 1 ? "s" : ""} available</span>
+          <div style={{display:"flex",alignItems:"center",gap:4,fontSize:12,color:MUTED}}>
+            <span className="material-icons" style={{fontSize:14}}>event_available</span>
+            <span>{w.available.length} batches</span>
           </div>
         </div>
 
-        {/* Seat bar */}
         <SeatBar booked={w.booked} seats={w.seats} />
 
-        {/* CTA button */}
         <button
           onClick={e => { e.stopPropagation(); !full && onBook(w); }}
           disabled={full}
           style={{
-            padding:"10px 0",
+            padding:"12px 0",
             width:"100%",
             border:"none",
-            borderRadius:8,
+            borderRadius:12,
             background: full
               ? "#9ca3af"
               : hovered
-                ? (gradient.includes("7c3aed") ? "#4338ca" : ACCENT)
+                ? "#2563eb"
                 : ACCENT,
+            boxShadow: hovered && !full ? "0 8px 20px rgba(79, 110, 247, 0.3)" : "none",
             color:"#fff",
             fontWeight:700,
             fontSize:14,
             cursor: full ? "not-allowed" : "pointer",
-            letterSpacing:"0.02em",
-            display:"flex", alignItems:"center", justifyContent:"center", gap:6,
-            transition:"background .2s",
+            letterSpacing:"0.01em",
+            display:"flex", alignItems:"center", justifyContent:"center", gap:8,
+            transition:"all .3s ease",
+            marginTop:4,
           }}
         >
-          <span className="material-icons" style={{fontSize:17}}>
-            {full ? "block" : "edit_calendar"}
+          <span className="material-icons" style={{fontSize:18}}>
+            {full ? "block" : "calendar_today"}
           </span>
-          {full ? "Fully Booked" : "Book This Workshop"}
+          {full ? "Fully Booked" : "Reserve Your Spot"}
         </button>
       </div>
     </div>
   );
 }
 
-/* ─── Booking Modal (unchanged logic, minor style polish) ─── */
 function BookingModal({ w, user, onClose, onConfirm }) {
   const [step,setStep]   = useState(1);
   const [date,setDate]   = useState("");
@@ -312,20 +309,18 @@ function BookingModal({ w, user, onClose, onConfirm }) {
       cursor: disabled ? "not-allowed" : "pointer",
     }}>{label}</button>
   );
-  const gradient = CAT_GRADIENT[w.category] || DEFAULT_GRADIENT;
+  
   return (
     <div style={{position:"fixed",inset:0,background:"rgba(0,0,0,.55)",display:"flex",alignItems:"center",justifyContent:"center",zIndex:1050,padding:16}}
       onClick={e=>e.target===e.currentTarget&&onClose()}>
       <div style={{background:"#fff",borderRadius:12,width:"100%",maxWidth:500,boxShadow:"0 20px 60px rgba(0,0,0,.3)",overflow:"hidden"}}>
-        {/* header */}
-        <div style={{background:gradient,padding:"16px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+        <div style={{background:BRAND,padding:"16px 20px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
           <div>
             <div style={{color:"rgba(255,255,255,.7)",fontSize:11,marginBottom:3,letterSpacing:"0.05em",textTransform:"uppercase"}}>Book Workshop</div>
             <div style={{color:"#fff",fontWeight:700,fontSize:17}}>{w.title}</div>
           </div>
           <button onClick={onClose} style={{background:"rgba(255,255,255,.15)",border:"none",color:"#fff",fontSize:20,cursor:"pointer",width:32,height:32,borderRadius:8,display:"flex",alignItems:"center",justifyContent:"center"}}>×</button>
         </div>
-        {/* step tabs */}
         <div style={{display:"flex",borderBottom:"1px solid #e5e7eb"}}>
           {["Your Info","Pick Date","Confirm"].map((label,i)=>{
             const active=step===i+1, done=step>i+1;
@@ -358,7 +353,7 @@ function BookingModal({ w, user, onClose, onConfirm }) {
                 {w.available.map(d=>(
                   <label key={d} style={{display:"flex",alignItems:"center",gap:10,padding:"11px 14px",borderRadius:8,cursor:"pointer",border:`1.5px solid ${date===d?ACCENT:"#e5e7eb"}`,background:date===d?"#eef2ff":"#fafafa",transition:"all .15s"}}>
                     <input type="radio" name="date" value={d} checked={date===d} onChange={()=>setDate(d)} style={{accentColor:ACCENT}}/>
-                    <span style={{fontSize:13,fontWeight:date===d?700:400,color:"#111827"}}>{fmtDate(d)}</span>
+                    <span style={{fontSize:13,fontWeight:700,color:"#111827"}}>{fmtDate(d)}</span>
                   </label>
                 ))}
               </div>
@@ -393,7 +388,6 @@ function BookingModal({ w, user, onClose, onConfirm }) {
   );
 }
 
-/* ─── Success Alert ─── */
 function SuccessAlert({ booking, onDismiss }) {
   if (!booking) return null;
   return (
@@ -419,31 +413,52 @@ function SuccessAlert({ booking, onDismiss }) {
   );
 }
 
-/* ─── My Bookings Page ─── */
 function MyBookingsPage({ bookings }) {
   if (bookings.length===0) return (
-    <div style={{textAlign:"center",padding:"80px 20px"}}>
-      <span className="material-icons" style={{fontSize:56,color:"#d1d5db",marginBottom:16}}>event_busy</span>
-      <h5 style={{color:"#111827",margin:"0 0 8px"}}>No bookings yet</h5>
-      <p style={{color:MUTED,fontSize:14,margin:0}}>Browse the workshops above and make your first booking.</p>
+    <div style={{textAlign:"center",padding:"100px 20px"}}>
+      <div style={{
+        width:80, height:80, borderRadius:"50%", background: "#f3f4f6", 
+        display:"flex", alignItems:"center", justifyContent:"center", 
+        margin:"0 auto 20px"
+      }}>
+        <span className="material-icons" style={{fontSize:40,color:"#d1d5db"}}>event_busy</span>
+      </div>
+      <h5 style={{color:"#111827",fontWeight:700,margin:"0 0 10px",fontSize:20}}>Your journey starts here</h5>
+      <p style={{color:MUTED,fontSize:15,margin:"0 0 24px"}}>You haven't saved any workshops yet. Let's find something inspiring!</p>
     </div>
   );
   return (
     <div>
-      <h5 style={{margin:"0 0 18px",fontWeight:700,color:"#111827"}}>My Bookings</h5>
-      <div style={{display:"flex",flexDirection:"column",gap:10}}>
+      <h5 style={{margin:"0 0 24px",fontWeight:800,color:"#111827",fontSize:22,letterSpacing:"-0.02em"}}>Your Saved Workshops</h5>
+      <div style={{display:"flex",flexDirection:"column",gap:16}}>
         {bookings.map((b,i)=>{
-          const gradient = CAT_GRADIENT[b.workshop.category] || DEFAULT_GRADIENT;
+          const image = CAT_IMAGE[b.workshop.category] || CAT_IMAGE["Core"];
           return (
-            <div key={i} style={{background:"#fff",border:"1px solid #e5e7eb",borderRadius:10,padding:"14px 18px",display:"flex",alignItems:"center",gap:14,boxShadow:"0 2px 8px rgba(0,0,0,.05)"}}>
-              <div style={{width:44,height:44,borderRadius:10,background:gradient,display:"flex",alignItems:"center",justifyContent:"center",flexShrink:0}}>
-                <span className="material-icons" style={{fontSize:22,color:"#fff"}}>{CAT_ICON[b.workshop.category]||"school"}</span>
+            <div key={i} style={{
+              background:"#fff", border:"1px solid #f0f0f0", borderRadius:16, 
+              padding:"12px", display:"flex", alignItems:"center", gap:20, 
+              boxShadow:"0 10px 25px rgba(0,0,0,.03)",
+              transition:"transform .2s ease",
+            }}>
+              <div style={{width:80,height:60,borderRadius:12,overflow:"hidden",flexShrink:0}}>
+                <img src={image} alt="" style={{width:"100%",height:"100%",objectFit:"cover"}}/>
               </div>
               <div style={{flex:1,minWidth:0}}>
-                <div style={{fontWeight:700,fontSize:14,color:"#111827",marginBottom:2}}>{b.workshop.title}</div>
-                <div style={{fontSize:12,color:MUTED}}>{b.workshop.instructor} · {fmtDate(b.date)}</div>
+                <div style={{fontWeight:700,fontSize:15,color:"#111827",marginBottom:4}}>{b.workshop.title}</div>
+                <div style={{fontSize:13,color:MUTED,display:"flex",alignItems:"center",gap:4}}>
+                  <span className="material-icons" style={{fontSize:14}}>person_outline</span> {b.workshop.instructor}
+                  <span style={{margin:"0 4px"}}>·</span>
+                  <span className="material-icons" style={{fontSize:14}}>event</span> {fmtDate(b.date)}
+                </div>
               </div>
-              <span style={{fontSize:11,fontWeight:700,color:WARN,background:"#fef3c7",borderRadius:20,padding:"3px 10px",whiteSpace:"nowrap"}}>Pending</span>
+              <div style={{padding:"0 12px"}}>
+                <span style={{
+                  fontSize:11,fontWeight:700,color:WARN,background:"#fffbeb",
+                  border: `1.5px solid ${WARN}20`,
+                  borderRadius:20,padding:"4px 12px",whiteSpace:"nowrap",
+                  textTransform:"uppercase", letterSpacing:0.5
+                }}>Pending Approval</span>
+              </div>
             </div>
           );
         })}
@@ -452,11 +467,15 @@ function MyBookingsPage({ bookings }) {
   );
 }
 
-/* ─── Main App ─── */
 function WorkshopApp() {
   const [page,setPage]         = useState("workshops");
   const [filter,setFilter]     = useState("All");
-  const [search,setSearch]     = useState("");
+  
+  const [search,setSearch]     = useState(() => {
+    const params = new URLSearchParams(window.location.search);
+    return params.get('q') || "";
+  });
+
   const [booking,setBooking]   = useState(null);
   const [success,setSuccess]   = useState(null);
   const [bookings,setBookings] = useState([]);
@@ -479,17 +498,15 @@ function WorkshopApp() {
     <div style={{fontFamily:"'Inter','Segoe UI',sans-serif",background:"transparent",minHeight:"80vh"}}>
       <div style={{maxWidth:1200,margin:"0 auto",padding:"24px 20px 60px"}}>
 
-        {/* ── Workshops page ── */}
         {page==="workshops" && (
           <div>
-            {/* Hero header */}
             <div style={{marginBottom:28,display:"flex",justifyContent:"space-between",alignItems:"flex-end",flexWrap:"wrap",gap:12}}>
               <div>
-                <h2 style={{margin:"0 0 5px",fontWeight:800,color:"#111827",fontSize:"1.75rem"}}>
-                  Discovery Center
+                <h2 style={{margin:"0 0 8px",fontWeight:800,color:"#111827",fontSize:"2rem",letterSpacing:"-0.02em"}}>
+                  Shape Your Future
                 </h2>
-                <p style={{margin:0,fontSize:14,color:MUTED}}>
-                  Explore {WORKSHOPS.length} premium FOSSEE technical training programs
+                <p style={{margin:0,fontSize:16,color:MUTED,maxWidth:500,lineHeight:1.5}}>
+                  Join our community of {WORKSHOPS.length} specialized technical workshops designed to jumpstart your career with FOSSEE, IIT Bombay.
                 </p>
               </div>
               <button
@@ -502,12 +519,11 @@ function WorkshopApp() {
                   boxShadow:"0 1px 4px rgba(0,0,0,.06)",
                 }}
               >
-                <span className="material-icons" style={{fontSize:17}}>bookmarks</span>
-                My Shortlist {bookings.length>0 && `(${bookings.length})`}
+                <span className="material-icons" style={{fontSize:18}}>favorite_border</span>
+                Saved Workshops {bookings.length>0 && `(${bookings.length})`}
               </button>
             </div>
 
-            {/* Filter bar */}
             <div style={{
               background:"#fff", border:"1px solid #e5e7eb", borderRadius:10,
               padding:"12px 16px", marginBottom:28,
@@ -517,14 +533,14 @@ function WorkshopApp() {
               <div style={{position:"relative",flex:"1 1 280px"}}>
                 <input
                   type="text"
-                  placeholder="Search workshops, instructors, or topics..."
+                  placeholder="What would you like to learn today?"
                   value={search}
                   onChange={e=>setSearch(e.target.value)}
                   style={{
-                    width:"100%", padding:"10px 12px 10px 38px",
-                    border:"1.5px solid #e5e7eb", borderRadius:8,
-                    fontSize:13.5, outline:"none", background:"#f9fafb",
-                    transition:"border .2s",
+                    width:"100%", padding:"12px 14px 12px 42px",
+                    border:"1.5px solid #e5e7eb", borderRadius:12,
+                    fontSize:14, outline:"none", background:"#f9fafb",
+                    transition:"all .2s ease",
                   }}
                   onFocus={e=>e.target.style.borderColor=ACCENT}
                   onBlur={e=>e.target.style.borderColor="#e5e7eb"}
@@ -543,7 +559,6 @@ function WorkshopApp() {
               </span>
             </div>
 
-            {/* Cards grid */}
             {filtered.length === 0
               ? (
                 <div style={{textAlign:"center",padding:"80px 0",color:MUTED}}>
@@ -561,7 +576,6 @@ function WorkshopApp() {
           </div>
         )}
 
-        {/* ── My Bookings page ── */}
         {page==="my-bookings" && (
           <div>
             <button
@@ -581,6 +595,5 @@ function WorkshopApp() {
   );
 }
 
-/* ─── Mount ─── */
 const root = ReactDOM.createRoot(document.getElementById('workshop-app-root'));
 root.render(<WorkshopApp />);
